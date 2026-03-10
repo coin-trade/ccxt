@@ -94,6 +94,7 @@ Exchange::$exchanges = array(
     'poloniex',
     'toobit',
     'upbit',
+    'valr',
     'whitebit',
     'woo',
     'woofipro',

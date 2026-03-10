@@ -445,6 +445,7 @@ class Exchange {
         'tokocrypto',
         'toobit',
         'upbit',
+        'valr',
         'wavesexchange',
         'whitebit',
         'woo',

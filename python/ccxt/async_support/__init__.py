@@ -167,6 +167,7 @@ from ccxt.async_support.timex import timex                                      
 from ccxt.async_support.tokocrypto import tokocrypto                            # noqa: F401
 from ccxt.async_support.toobit import toobit                                    # noqa: F401
 from ccxt.async_support.upbit import upbit                                      # noqa: F401
+from ccxt.async_support.valr import valr                                        # noqa: F401
 from ccxt.async_support.wavesexchange import wavesexchange                      # noqa: F401
 from ccxt.async_support.whitebit import whitebit                                # noqa: F401
 from ccxt.async_support.woo import woo                                          # noqa: F401
@@ -281,6 +282,7 @@ exchanges = [
     'tokocrypto',
     'toobit',
     'upbit',
+    'valr',
     'wavesexchange',
     'whitebit',
     'woo',
