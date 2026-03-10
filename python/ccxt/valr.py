@@ -129,7 +129,7 @@ class valr(Exchange, ImplicitAPI):
                 'fetchMyLiquidations': None,
                 'fetchMySettlementHistory': None,
                 'fetchMyTrades': True,
-                'fetchOHLCV': False,  # TODO
+                'fetchOHLCV': True,  # TODO
                 'fetchOpenInterest': None,
                 'fetchOpenInterestHistory': None,
                 'fetchOpenOrder': None,
@@ -1472,6 +1472,9 @@ class valr(Exchange, ImplicitAPI):
             'takerOrMaker': None,
             'timestamp': timestamp,
         })
+
+    def fetch_ohlcv(self, symbol: str, timeframe: str = '1m', since: Int = None, limit: Int = None, params={}) -> List[list]:
+        return Promise.resolve([])
 
     def fetch_trading_fees(self, params={}) -> TradingFees:
         """

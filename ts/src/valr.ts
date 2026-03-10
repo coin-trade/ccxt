@@ -17,6 +17,7 @@ import type {
     LedgerEntry,
     Market,
     Num,
+    OHLCV,
     OpenInterest,
     Order,
     OrderBook,
@@ -162,7 +163,7 @@ export default class valr extends Exchange {
                 'fetchMyLiquidations': undefined,
                 'fetchMySettlementHistory': undefined,
                 'fetchMyTrades': true,
-                'fetchOHLCV': false, // TODO
+                'fetchOHLCV': true, // TODO
                 'fetchOpenInterest': undefined,
                 'fetchOpenInterestHistory': undefined,
                 'fetchOpenOrder': undefined,
@@ -1622,6 +1623,10 @@ export default class valr extends Exchange {
             'takerOrMaker': undefined,
             'timestamp': timestamp,
         });
+    }
+
+    async fetchOHLCV (symbol: string, timeframe: string = '1m', since: Int = undefined, limit: Int = undefined, params = {}): Promise<OHLCV[]> {
+        return Promise.resolve ([]);
     }
 
     async fetchTradingFees (params = {}): Promise<TradingFees> {

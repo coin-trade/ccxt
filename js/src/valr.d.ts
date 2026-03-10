@@ -1,5 +1,5 @@
 import Exchange from './abstract/valr.js';
-import type { Account, Balances, CrossBorrowRates, Currencies, Currency, DepositAddress, Dict, FundingRate, FundingRates, int, Int, LedgerEntry, Market, Num, OpenInterest, Order, OrderBook, OrderRequest, OrderSide, OrderType, Position, Str, Strings, Ticker, Tickers, Trade, TradingFees, Transaction, TransferEntry } from './base/types.js';
+import type { Account, Balances, CrossBorrowRates, Currencies, Currency, DepositAddress, Dict, FundingRate, FundingRates, int, Int, LedgerEntry, Market, Num, OHLCV, OpenInterest, Order, OrderBook, OrderRequest, OrderSide, OrderType, Position, Str, Strings, Ticker, Tickers, Trade, TradingFees, Transaction, TransferEntry } from './base/types.js';
 /**
  * @class valr
  * @augments Exchange
@@ -45,6 +45,7 @@ export default class valr extends Exchange {
     fetchTrades(symbol: string, since?: Int, limit?: Int, params?: {}): Promise<Trade[]>;
     fetchMyTrades(symbol?: Str, since?: Int, limit?: Int, params?: {}): Promise<Trade[]>;
     parseTrade(trade: object, market?: Market): Trade;
+    fetchOHLCV(symbol: string, timeframe?: string, since?: Int, limit?: Int, params?: {}): Promise<OHLCV[]>;
     fetchTradingFees(params?: {}): Promise<TradingFees>;
     loadTradingFees(params?: {}): Promise<void>;
     fetchDepositAddress(code: string, params?: {}): Promise<DepositAddress>;

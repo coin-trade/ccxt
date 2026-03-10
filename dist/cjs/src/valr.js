@@ -121,7 +121,7 @@ class valr extends valr$1["default"] {
                 'fetchMyLiquidations': undefined,
                 'fetchMySettlementHistory': undefined,
                 'fetchMyTrades': true,
-                'fetchOHLCV': false,
+                'fetchOHLCV': true,
                 'fetchOpenInterest': undefined,
                 'fetchOpenInterestHistory': undefined,
                 'fetchOpenOrder': undefined,
@@ -1560,6 +1560,9 @@ class valr extends valr$1["default"] {
             'takerOrMaker': undefined,
             'timestamp': timestamp,
         });
+    }
+    async fetchOHLCV(symbol, timeframe = '1m', since = undefined, limit = undefined, params = {}) {
+        return Promise.resolve([]);
     }
     async fetchTradingFees(params = {}) {
         /**

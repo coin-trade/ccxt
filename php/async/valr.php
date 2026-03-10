@@ -125,7 +125,7 @@ class valr extends Exchange {
                 'fetchMyLiquidations' => null,
                 'fetchMySettlementHistory' => null,
                 'fetchMyTrades' => true,
-                'fetchOHLCV' => false, // TODO
+                'fetchOHLCV' => true, // TODO
                 'fetchOpenInterest' => null,
                 'fetchOpenInterestHistory' => null,
                 'fetchOpenOrder' => null,
@@ -1587,6 +1587,10 @@ class valr extends Exchange {
             'takerOrMaker' => null,
             'timestamp' => $timestamp,
         ));
+    }
+
+    public function fetch_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()): PromiseInterface {
+        return Promise.resolve (array());
     }
 
     public function fetch_trading_fees($params = array ()): PromiseInterface {

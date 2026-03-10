@@ -122,7 +122,7 @@ export default class valr extends Exchange {
                 'fetchMyLiquidations': undefined,
                 'fetchMySettlementHistory': undefined,
                 'fetchMyTrades': true,
-                'fetchOHLCV': false,
+                'fetchOHLCV': true,
                 'fetchOpenInterest': undefined,
                 'fetchOpenInterestHistory': undefined,
                 'fetchOpenOrder': undefined,
@@ -1561,6 +1561,9 @@ export default class valr extends Exchange {
             'takerOrMaker': undefined,
             'timestamp': timestamp,
         });
+    }
+    async fetchOHLCV(symbol, timeframe = '1m', since = undefined, limit = undefined, params = {}) {
+        return Promise.resolve([]);
     }
     async fetchTradingFees(params = {}) {
         /**
