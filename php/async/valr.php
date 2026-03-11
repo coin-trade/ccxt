@@ -24,7 +24,8 @@ class valr extends Exchange {
             'id' => 'valr',
             'name' => 'VALR',
             'countries' => array( 'ZA' ),
-            'rateLimit' => 1000,
+            // 360 calls per minute = 6 calls per second = 1000ms / 6 = 166.6667ms between requests
+            'rateLimit' => 50,
             'version' => '1',
             // 'comment' => 'This comment is optional',
             'has' => array(
@@ -471,6 +472,15 @@ class valr extends Exchange {
                     'Internal transfer did not succeed A subaccount can only transfer funds from itself' => '\\ccxt\\BadRequest',
                     'Invalid Request, please check your request and try again' => '\\ccxt\\BadRequest',
                 ),
+            ),
+            'timeframes' => array(
+                '1m' => 60,
+                '5m' => 300,
+                '15m' => 900,
+                '30m' => 1800,
+                '1h' => 3600,
+                '6h' => 21600,
+                '1d' => 86400,
             ),
         ));
     }
@@ -1590,7 +1600,10 @@ class valr extends Exchange {
     }
 
     public function fetch_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()): PromiseInterface {
-        return Promise.resolve (array());
+        return Async\async(function () use ($symbol, $timeframe, $since, $limit, $params) {
+            Async\await($this->load_markets());
+            return array();
+        }) ();
     }
 
     public function fetch_trading_fees($params = array ()): PromiseInterface {

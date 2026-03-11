@@ -1563,7 +1563,8 @@ export default class valr extends Exchange {
         });
     }
     async fetchOHLCV(symbol, timeframe = '1m', since = undefined, limit = undefined, params = {}) {
-        return Promise.resolve([]);
+        await this.loadMarkets();
+        return [];
     }
     async fetchTradingFees(params = {}) {
         /**

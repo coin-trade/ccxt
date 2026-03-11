@@ -28,7 +28,8 @@ class valr(Exchange, ImplicitAPI):
             'id': 'valr',
             'name': 'VALR',
             'countries': ['ZA'],
-            'rateLimit': 1000,
+            # 360 calls per minute = 6 calls per second = 1000ms / 6 = 166.6667ms between requests
+            'rateLimit': 50,
             'version': '1',
             # 'comment': 'This comment is optional',
             'has': {
@@ -475,6 +476,15 @@ class valr(Exchange, ImplicitAPI):
                     'Internal transfer did not succeed A subaccount can only transfer funds from itself': BadRequest,
                     'Invalid Request, please check your request and try again': BadRequest,
                 },
+            },
+            'timeframes': {
+                '1m': 60,
+                '5m': 300,
+                '15m': 900,
+                '30m': 1800,
+                '1h': 3600,
+                '6h': 21600,
+                '1d': 86400,
             },
         })
 
@@ -1474,7 +1484,8 @@ class valr(Exchange, ImplicitAPI):
         })
 
     def fetch_ohlcv(self, symbol: str, timeframe: str = '1m', since: Int = None, limit: Int = None, params={}) -> List[list]:
-        return Promise.resolve([])
+        self.load_markets()
+        return []
 
     def fetch_trading_fees(self, params={}) -> TradingFees:
         """

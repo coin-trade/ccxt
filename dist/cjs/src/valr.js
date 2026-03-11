@@ -1562,7 +1562,8 @@ class valr extends valr$1["default"] {
         });
     }
     async fetchOHLCV(symbol, timeframe = '1m', since = undefined, limit = undefined, params = {}) {
-        return Promise.resolve([]);
+        await this.loadMarkets();
+        return [];
     }
     async fetchTradingFees(params = {}) {
         /**
