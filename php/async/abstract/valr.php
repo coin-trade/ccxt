@@ -37,6 +37,9 @@ abstract class valr extends \ccxt\async\Exchange {
     public function public_get_pair_markprice_buckets($params = array()) {
         return $this->request('{pair}/markprice/buckets', 'public', 'GET', $params, null, null, array());
     }
+    public function public_get_pair_buckets($params = array()) {
+        return $this->request('{pair}/buckets', 'public', 'GET', $params, null, null, array());
+    }
     public function public_get_pair_trades($params = array()) {
         return $this->request('{pair}/trades', 'public', 'GET', $params, null, null, array());
     }
@@ -402,6 +405,9 @@ abstract class valr extends \ccxt\async\Exchange {
     }
     public function publicGetPairMarkpriceBuckets($params = array()) {
         return $this->request('{pair}/markprice/buckets', 'public', 'GET', $params, null, null, array());
+    }
+    public function publicGetPairBuckets($params = array()) {
+        return $this->request('{pair}/buckets', 'public', 'GET', $params, null, null, array());
     }
     public function publicGetPairTrades($params = array()) {
         return $this->request('{pair}/trades', 'public', 'GET', $params, null, null, array());

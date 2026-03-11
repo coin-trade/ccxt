@@ -61,6 +61,11 @@ public partial class valr : Exchange
         return await this.callAsync ("publicGetPairMarkpriceBuckets",parameters);
     }
 
+    public async Task<object> publicGetPairBuckets (object parameters = null)
+    {
+        return await this.callAsync ("publicGetPairBuckets",parameters);
+    }
+
     public async Task<object> publicGetPairTrades (object parameters = null)
     {
         return await this.callAsync ("publicGetPairTrades",parameters);

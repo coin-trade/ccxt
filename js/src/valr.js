@@ -206,6 +206,7 @@ export default class valr extends Exchange {
                         'marketsummary',
                         '{pair}/marketsummary',
                         '{pair}/markprice/buckets',
+                        '{pair}/buckets',
                         '{pair}/trades',
                         'futures/funding/history',
                         'futures/info',
@@ -445,7 +446,7 @@ export default class valr extends Exchange {
                         'symbolRequired': false,
                     },
                     'fetchOHLCV': {
-                        'limit': undefined,
+                        'limit': 300,
                     },
                 },
                 'swap': {
@@ -1574,7 +1575,65 @@ export default class valr extends Exchange {
     }
     async fetchOHLCV(symbol, timeframe = '1m', since = undefined, limit = undefined, params = {}) {
         await this.loadMarkets();
-        return [];
+        const market = this.market(symbol);
+        if (limit === undefined) {
+            limit = 100; // default 100, max 300
+        }
+        const request = {
+            'pair': market['id'],
+            'periodSeconds': this.parseTimeframe(timeframe),
+            'limit': limit,
+            'includeEmpty': true,
+            // 'startTime': this.parseToInt (since / 1000) // convert milliseconds to seconds
+        };
+        const response = await this.publicGetPairBuckets(this.extend(request, params));
+        // [
+        //     {
+        //         currencyPairSymbol: "USDTZAR",
+        //         bucketPeriodInSeconds: "300",
+        //         startTime: "2026-03-11T19:20:00Z",
+        //         open: "16.5849",
+        //         high: "16.5849",
+        //         low: "16.5849",
+        //         close: "16.5849",
+        //         volume: "0",
+        //         quoteVolume: "0",
+        //     },
+        //     {
+        //         currencyPairSymbol: "USDTZAR",
+        //         bucketPeriodInSeconds: "300",
+        //         startTime: "2026-03-11T19:15:00Z",
+        //         open: "16.5827",
+        //         high: "16.5849",
+        //         low: "16.5827",
+        //         close: "16.5849",
+        //         volume: "3173.0137",
+        //         quoteVolume: "52618.28619867",
+        //     }, ...
+        // ]
+        const parsed = this.parseOHLCVs(response, market, timeframe, undefined, limit);
+        return parsed;
+    }
+    parseOHLCV(ohlcv, market = undefined) {
+        // {
+        //     currencyPairSymbol: "USDTZAR",
+        //     bucketPeriodInSeconds: "300",
+        //     startTime: "2026-03-11T19:15:00Z",
+        //     open: "16.5827",
+        //     high: "16.5849",
+        //     low: "16.5827",
+        //     close: "16.5849",
+        //     volume: "3173.0137",
+        //     quoteVolume: "52618.28619867",
+        // }
+        return [
+            this.parse8601(this.safeString(ohlcv, 'startTime')),
+            this.safeNumber(ohlcv, 'open'),
+            this.safeNumber(ohlcv, 'high'),
+            this.safeNumber(ohlcv, 'low'),
+            this.safeNumber(ohlcv, 'close'),
+            this.safeNumber(ohlcv, 'volume'),
+        ];
     }
     async fetchTradingFees(params = {}) {
         /**

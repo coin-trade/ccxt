@@ -213,6 +213,7 @@ class valr(Exchange, ImplicitAPI):
                         'marketsummary',  # fetchTickers
                         '{pair}/marketsummary',  # fetchTicker
                         '{pair}/markprice/buckets',
+                        '{pair}/buckets',  # fetchOHLCV
                         '{pair}/trades',  # fetchTrades
                         'futures/funding/history',  # TODO fetchFundingRateHistory
                         'futures/info',  # fetchFundingRates
@@ -452,7 +453,7 @@ class valr(Exchange, ImplicitAPI):
                         'symbolRequired': False,
                     },
                     'fetchOHLCV': {
-                        'limit': None,
+                        'limit': 300,
                     },
                 },
                 'swap': {
@@ -1485,7 +1486,64 @@ class valr(Exchange, ImplicitAPI):
 
     async def fetch_ohlcv(self, symbol: str, timeframe: str = '1m', since: Int = None, limit: Int = None, params={}) -> List[list]:
         await self.load_markets()
-        return []
+        market = self.market(symbol)
+        if limit is None:
+            limit = 100  # default 100, max 300
+        request = {
+            'pair': market['id'],
+            'periodSeconds': self.parse_timeframe(timeframe),
+            'limit': limit,
+            'includeEmpty': True,
+            # 'startTime': self.parse_to_int(since / 1000)  # convert milliseconds to seconds
+        }
+        response = await self.publicGetPairBuckets(self.extend(request, params))
+        # [
+        #     {
+        #         currencyPairSymbol: "USDTZAR",
+        #         bucketPeriodInSeconds: "300",
+        #         startTime: "2026-03-11T19:20:00Z",
+        #         open: "16.5849",
+        #         high: "16.5849",
+        #         low: "16.5849",
+        #         close: "16.5849",
+        #         volume: "0",
+        #         quoteVolume: "0",
+        #     },
+        #     {
+        #         currencyPairSymbol: "USDTZAR",
+        #         bucketPeriodInSeconds: "300",
+        #         startTime: "2026-03-11T19:15:00Z",
+        #         open: "16.5827",
+        #         high: "16.5849",
+        #         low: "16.5827",
+        #         close: "16.5849",
+        #         volume: "3173.0137",
+        #         quoteVolume: "52618.28619867",
+        #     }, ...
+        # ]
+        parsed = self.parse_ohlcvs(response, market, timeframe, None, limit)
+        return parsed
+
+    def parse_ohlcv(self, ohlcv, market: Market = None) -> list:
+        # {
+        #     currencyPairSymbol: "USDTZAR",
+        #     bucketPeriodInSeconds: "300",
+        #     startTime: "2026-03-11T19:15:00Z",
+        #     open: "16.5827",
+        #     high: "16.5849",
+        #     low: "16.5827",
+        #     close: "16.5849",
+        #     volume: "3173.0137",
+        #     quoteVolume: "52618.28619867",
+        # }
+        return [
+            self.parse8601(self.safe_string(ohlcv, 'startTime')),
+            self.safe_number(ohlcv, 'open'),
+            self.safe_number(ohlcv, 'high'),
+            self.safe_number(ohlcv, 'low'),
+            self.safe_number(ohlcv, 'close'),
+            self.safe_number(ohlcv, 'volume'),
+        ]
 
     async def fetch_trading_fees(self, params={}) -> TradingFees:
         """

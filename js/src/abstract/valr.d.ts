@@ -11,6 +11,7 @@ interface Exchange {
     publicGetMarketsummary(params?: {}): Promise<implicitReturnType>;
     publicGetPairMarketsummary(params?: {}): Promise<implicitReturnType>;
     publicGetPairMarkpriceBuckets(params?: {}): Promise<implicitReturnType>;
+    publicGetPairBuckets(params?: {}): Promise<implicitReturnType>;
     publicGetPairTrades(params?: {}): Promise<implicitReturnType>;
     publicGetFuturesFundingHistory(params?: {}): Promise<implicitReturnType>;
     publicGetFuturesInfo(params?: {}): Promise<implicitReturnType>;

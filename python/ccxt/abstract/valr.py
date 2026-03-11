@@ -12,6 +12,7 @@ class ImplicitAPI:
     public_get_marketsummary = publicGetMarketsummary = Entry('marketsummary', 'public', 'GET', {})
     public_get_pair_marketsummary = publicGetPairMarketsummary = Entry('{pair}/marketsummary', 'public', 'GET', {})
     public_get_pair_markprice_buckets = publicGetPairMarkpriceBuckets = Entry('{pair}/markprice/buckets', 'public', 'GET', {})
+    public_get_pair_buckets = publicGetPairBuckets = Entry('{pair}/buckets', 'public', 'GET', {})
     public_get_pair_trades = publicGetPairTrades = Entry('{pair}/trades', 'public', 'GET', {})
     public_get_futures_funding_history = publicGetFuturesFundingHistory = Entry('futures/funding/history', 'public', 'GET', {})
     public_get_futures_info = publicGetFuturesInfo = Entry('futures/info', 'public', 'GET', {})

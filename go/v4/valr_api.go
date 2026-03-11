@@ -47,6 +47,10 @@ func (this *ValrCore) PublicGetPairMarkpriceBuckets (args ...interface{}) <-chan
    return this.callEndpointAsync("publicGetPairMarkpriceBuckets", args...)
 }
 
+func (this *ValrCore) PublicGetPairBuckets (args ...interface{}) <-chan interface{} {
+   return this.callEndpointAsync("publicGetPairBuckets", args...)
+}
+
 func (this *ValrCore) PublicGetPairTrades (args ...interface{}) <-chan interface{} {
    return this.callEndpointAsync("publicGetPairTrades", args...)
 }

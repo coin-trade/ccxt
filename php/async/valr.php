@@ -209,6 +209,7 @@ class valr extends Exchange {
                         'marketsummary', // fetchTickers
                         '{pair}/marketsummary', // fetchTicker
                         '{pair}/markprice/buckets',
+                        '{pair}/buckets', // fetchOHLCV
                         '{pair}/trades', // fetchTrades
                         'futures/funding/history', // TODO fetchFundingRateHistory
                         'futures/info', // fetchFundingRates
@@ -448,7 +449,7 @@ class valr extends Exchange {
                         'symbolRequired' => false,
                     ),
                     'fetchOHLCV' => array(
-                        'limit' => null,
+                        'limit' => 300,
                     ),
                 ),
                 'swap' => array(
@@ -1602,8 +1603,67 @@ class valr extends Exchange {
     public function fetch_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()): PromiseInterface {
         return Async\async(function () use ($symbol, $timeframe, $since, $limit, $params) {
             Async\await($this->load_markets());
-            return array();
+            $market = $this->market($symbol);
+            if ($limit === null) {
+                $limit = 100; // default 100, max 300
+            }
+            $request = array(
+                'pair' => $market['id'],
+                'periodSeconds' => $this->parse_timeframe($timeframe),
+                'limit' => $limit,
+                'includeEmpty' => true,
+                // 'startTime' => $this->parse_to_int($since / 1000) // convert milliseconds to seconds
+            );
+            $response = Async\await($this->publicGetPairBuckets ($this->extend($request, $params)));
+            // array(
+            //     array(
+            //         currencyPairSymbol => "USDTZAR",
+            //         bucketPeriodInSeconds => "300",
+            //         startTime => "2026-03-11T19:20:00Z",
+            //         open => "16.5849",
+            //         high => "16.5849",
+            //         low => "16.5849",
+            //         close => "16.5849",
+            //         volume => "0",
+            //         quoteVolume => "0",
+            //     ),
+            //     array(
+            //         currencyPairSymbol => "USDTZAR",
+            //         bucketPeriodInSeconds => "300",
+            //         startTime => "2026-03-11T19:15:00Z",
+            //         open => "16.5827",
+            //         high => "16.5849",
+            //         low => "16.5827",
+            //         close => "16.5849",
+            //         volume => "3173.0137",
+            //         quoteVolume => "52618.28619867",
+            //     ), ...
+            // )
+            $parsed = $this->parse_ohlcvs($response, $market, $timeframe, null, $limit);
+            return $parsed;
         }) ();
+    }
+
+    public function parse_ohlcv($ohlcv, ?array $market = null): array {
+        // {
+        //     currencyPairSymbol => "USDTZAR",
+        //     bucketPeriodInSeconds => "300",
+        //     startTime => "2026-03-11T19:15:00Z",
+        //     open => "16.5827",
+        //     high => "16.5849",
+        //     low => "16.5827",
+        //     close => "16.5849",
+        //     volume => "3173.0137",
+        //     quoteVolume => "52618.28619867",
+        // }
+        return array(
+            $this->parse8601($this->safe_string($ohlcv, 'startTime')),
+            $this->safe_number($ohlcv, 'open'),
+            $this->safe_number($ohlcv, 'high'),
+            $this->safe_number($ohlcv, 'low'),
+            $this->safe_number($ohlcv, 'close'),
+            $this->safe_number($ohlcv, 'volume'),
+        );
     }
 
     public function fetch_trading_fees($params = array ()): PromiseInterface {

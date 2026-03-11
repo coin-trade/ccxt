@@ -46,6 +46,7 @@ export default class valr extends Exchange {
     fetchMyTrades(symbol?: Str, since?: Int, limit?: Int, params?: {}): Promise<Trade[]>;
     parseTrade(trade: object, market?: Market): Trade;
     fetchOHLCV(symbol: string, timeframe?: string, since?: Int, limit?: Int, params?: {}): Promise<OHLCV[]>;
+    parseOHLCV(ohlcv: any, market?: Market): OHLCV;
     fetchTradingFees(params?: {}): Promise<TradingFees>;
     loadTradingFees(params?: {}): Promise<void>;
     fetchDepositAddress(code: string, params?: {}): Promise<DepositAddress>;
