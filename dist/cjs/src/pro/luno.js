@@ -96,6 +96,7 @@ class luno extends luno$1["default"] {
         }
         for (let i = 0; i < rawTrades.length; i++) {
             const rawTrade = rawTrades[i];
+            rawTrade['timestamp'] = message['timestamp'];
             const trade = this.parseTrade(rawTrade, market);
             stored.append(trade);
         }
@@ -117,15 +118,15 @@ class luno extends luno$1["default"] {
         return this.safeTrade({
             'info': trade,
             'id': undefined,
-            'timestamp': undefined,
-            'datetime': undefined,
+            'timestamp': trade['timestamp'],
+            'datetime': this.iso8601(trade['timestamp']),
             'symbol': market['symbol'],
             'order': undefined,
             'type': undefined,
             'side': undefined,
             // takerOrMaker has no meaning for public trades
             'takerOrMaker': undefined,
-            'price': undefined,
+            'price': this.safeFloat(trade, 'counter') / this.safeFloat(trade, 'base'),
             'amount': this.safeString(trade, 'base'),
             'cost': this.safeString(trade, 'counter'),
             'fee': undefined,

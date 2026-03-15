@@ -105,6 +105,7 @@ class luno extends \ccxt\async\luno {
         }
         for ($i = 0; $i < count($rawTrades); $i++) {
             $rawTrade = $rawTrades[$i];
+            $rawTrade['timestamp'] = $message['timestamp'];
             $trade = $this->parse_trade($rawTrade, $market);
             $stored->append ($trade);
         }
@@ -127,15 +128,15 @@ class luno extends \ccxt\async\luno {
         return $this->safe_trade(array(
             'info' => $trade,
             'id' => null,
-            'timestamp' => null,
-            'datetime' => null,
+            'timestamp' => $trade['timestamp'],
+            'datetime' => $this->iso8601($trade['timestamp']),
             'symbol' => $market['symbol'],
             'order' => null,
             'type' => null,
             'side' => null,
             // takerOrMaker has no meaning for public trades
             'takerOrMaker' => null,
-            'price' => null,
+            'price' => $this->safe_float($trade, 'counter') / $this->safe_float($trade, 'base'),
             'amount' => $this->safe_string($trade, 'base'),
             'cost' => $this->safe_string($trade, 'counter'),
             'fee' => null,

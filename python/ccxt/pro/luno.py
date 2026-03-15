@@ -99,6 +99,7 @@ class luno(ccxt.async_support.luno):
             self.trades[symbol] = stored
         for i in range(0, len(rawTrades)):
             rawTrade = rawTrades[i]
+            rawTrade['timestamp'] = message['timestamp']
             trade = self.parse_trade(rawTrade, market)
             stored.append(trade)
         self.trades[symbol] = stored
@@ -119,15 +120,15 @@ class luno(ccxt.async_support.luno):
         return self.safe_trade({
             'info': trade,
             'id': None,
-            'timestamp': None,
-            'datetime': None,
+            'timestamp': trade['timestamp'],
+            'datetime': self.iso8601(trade['timestamp']),
             'symbol': market['symbol'],
             'order': None,
             'type': None,
             'side': None,
             # takerOrMaker has no meaning for public trades
             'takerOrMaker': None,
-            'price': None,
+            'price': self.safe_float(trade, 'counter') / self.safe_float(trade, 'base'),
             'amount': self.safe_string(trade, 'base'),
             'cost': self.safe_string(trade, 'counter'),
             'fee': None,
