@@ -830,6 +830,7 @@ class valr(Exchange, ImplicitAPI):
         self.check_required_symbol_argument('fetchOrderBook', symbol)
         queryParams = {
             'pair': self.market_id(symbol),
+            'limit': limit,
         }
         if self.check_required_credentials(False):
             response = self.privateGetMarketdataPairOrderbook(self.extend(queryParams, params))

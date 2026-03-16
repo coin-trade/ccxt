@@ -583,6 +583,7 @@ class luno extends Exchange {
         );
         $response = null;
         if ($limit !== null && $limit <= 100) {
+            $params['limit'] = $limit;
             $response = $this->publicGetOrderbookTop ($this->extend($request, $params));
         } else {
             $response = $this->publicGetOrderbook ($this->extend($request, $params));

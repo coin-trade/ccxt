@@ -597,6 +597,7 @@ class luno extends Exchange {
             );
             $response = null;
             if ($limit !== null && $limit <= 100) {
+                $params['limit'] = $limit;
                 $response = Async\await($this->publicGetOrderbookTop ($this->extend($request, $params)));
             } else {
                 $response = Async\await($this->publicGetOrderbook ($this->extend($request, $params)));

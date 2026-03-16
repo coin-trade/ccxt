@@ -861,6 +861,7 @@ class valr extends Exchange {
             $this->check_required_symbol_argument('fetchOrderBook', $symbol);
             $queryParams = array(
                 'pair' => $this->market_id($symbol),
+                'limit' => $limit,
             );
             if ($this->check_required_credentials(false)) {
                 $response = Async\await($this->privateGetMarketdataPairOrderbook ($this->extend($queryParams, $params)));

@@ -584,6 +584,7 @@ class luno extends luno$1["default"] {
         };
         let response = undefined;
         if (limit !== undefined && limit <= 100) {
+            params['limit'] = limit;
             response = await this.publicGetOrderbookTop(this.extend(request, params));
         }
         else {

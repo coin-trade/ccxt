@@ -900,6 +900,7 @@ export default class valr extends Exchange {
         this.checkRequiredSymbolArgument ('fetchOrderBook', symbol);
         const queryParams = {
             'pair': this.marketId (symbol),
+            'limit': limit,
         };
         if (this.checkRequiredCredentials (false)) {
             response = await this.privateGetMarketdataPairOrderbook (this.extend (queryParams, params));

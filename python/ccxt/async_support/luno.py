@@ -574,6 +574,7 @@ class luno(Exchange, ImplicitAPI):
         }
         response = None
         if limit is not None and limit <= 100:
+            params['limit'] = limit
             response = await self.publicGetOrderbookTop(self.extend(request, params))
         else:
             response = await self.publicGetOrderbook(self.extend(request, params))

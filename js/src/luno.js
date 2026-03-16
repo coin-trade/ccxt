@@ -585,6 +585,7 @@ export default class luno extends Exchange {
         };
         let response = undefined;
         if (limit !== undefined && limit <= 100) {
+            params['limit'] = limit;
             response = await this.publicGetOrderbookTop(this.extend(request, params));
         }
         else {
